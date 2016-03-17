@@ -659,6 +659,13 @@ module.exports = (function(){
       return data;
     }
 
+    obj.clear = function() {
+      data = {};
+      obj.stats.writes = 0;
+      obj.stats.hits = 0;
+      obj.stats.misses = 0;
+    }
+
     return obj;
   })();
 

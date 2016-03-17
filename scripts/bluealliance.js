@@ -53,4 +53,70 @@ module.exports = function(robot) {
       }
     } );
   });
+
+  robot.respond( /(will|was|is) (\d*) (at|be at|attend) (.*)\s?/i, function ( message ){
+    var team = message.match[2];
+    var team_key = "frc" + team;
+    var event = message.match[4].replace("?","");
+    TBA.team.event.list( team_key, 2016, function( info ){
+      var output = "No. I did not find " + team + " registered for " + event +".";
+      var events = [];
+      info.forEach( function( e, i, a ) {
+        if ( e.key === event ) {
+          output = "Yes, I found " + team + " listed for the " + e.name;
+        }
+        events.push( e.key );
+      } );
+      message.reply( output );
+      message.reply( "They are registered for " + events.join( ", " ) );
+    } );
+  });
+
+  robot.respond( /was (\d*) in (.*) playoffs\s?/i, function ( message ){
+    var team = message.match[1];
+    var team_key = "frc" + team;
+    var event = message.match[2].replace("?","");
+    TBA.event.get( event, function( info ){
+      if ( info.name === undefined ) {
+        message.reply(
+          "There is no event with that name."
+        );
+      } else {
+        if ( info.alliances.length === 0 ) {
+          message.reply( "That event has not happened yet." );
+          return;
+        }
+
+        output = "No. We could not find " + team + " in the playoffs for " + event;
+        var playoff_teams = [];
+        info.alliances.forEach( function( e, i, a ) {
+          if ( team_key == e.picks[0] ) {
+            output = "Yes. " + team + " was on Alliance #" + (i + 1) + " as Alliance Captian";
+          } else if ( team_key == e.picks[1] ) {
+            output = "Yes. " + team + " was on Alliance #" + (i + 1) + " as Pick #1";
+          } else if ( team_key == e.picks[2] ) {
+            output = "Yes. " + team + " was on Alliance #" + (i + 1) + " as Pick #2";
+          }
+        } );
+
+        message.reply( output );
+      }
+    } );
+
+  });
+
+  robot.respond( /give me cache stats/, function ( message ){
+    var stats = TBA.cache.stats;
+    message.reply( "Currently the cache has " + stats.writes + " writes, " + stats.hits + " hits, and " + stats.misses + " misses." );
+  } );
+
+  robot.respond( /clear the cache/, function ( message ){
+    TBA.cache.clear();
+
+    var fs = require("fs");
+    var contents = fs.readFileSync("random-quotes.csv") + " ";
+    content = contents.split("\n");
+    message.send( message.random( content ) + " (Done!)" );
+  } );
+
 };
