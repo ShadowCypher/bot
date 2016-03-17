@@ -24,16 +24,31 @@ module.exports = function(robot) {
     } );
   });
 
-  robot.respond( /when is event (.*)\s?/i, function ( message ){
+  robot.respond( /when is (.*)\s?/i, function ( message ){
     var event = message.match[1].replace("?","");
     TBA.event.get( event, function( info ){
       if ( info.name === undefined ) {
         message.reply(
-          "There is no event like that."
+          "There is no event with that name."
         );
       } else {
         message.reply(
           "The " + info.name + " is from " + info.start_date + " until " + info.end_date + "."
+        );
+      }
+    } );
+  });
+
+  robot.respond( /where is (.*)\s?/i, function ( message ){
+    var event = message.match[1].replace("?","");
+    TBA.event.get( event, function( info ){
+      if ( info.name === undefined ) {
+        message.reply(
+          "There is no event with that name."
+        );
+      } else {
+        message.reply(
+          "The " + info.name + " is located at: " + info.venue_address + "."
         );
       }
     } );
