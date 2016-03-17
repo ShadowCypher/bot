@@ -22,4 +22,10 @@ module.exports = function(robot) {
      content = contents.split("\n");
      response.send( response.random( content ) );
   } );
+  robot.respond( /give me a quote/, function( message ){
+    var fs = require("fs");
+    var contents = fs.readFileSync("random-quotes.csv") + " ";
+    content = contents.split("\n");
+    message.send( message.random( content ) );
+  } );
 }
