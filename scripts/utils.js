@@ -16,4 +16,10 @@ module.exports = function(robot) {
     var today = new Date();
     response.reply( today.getDay() === 0 || today.getDay() === 6 ? "It is the freaken weekend." : "Nope. Get back to work." );
   } );
+  robot.respond( /give me a carrot fact/, function( response ) {
+     var fs = require("fs");
+     var contents = fs.readFileSync("carrot-facts.csv") + " ";
+     content = contents.split("\n");
+     response.send( response.random( content ) );
+  } );
 }
