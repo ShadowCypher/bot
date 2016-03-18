@@ -1,3 +1,10 @@
+// Description:
+//  Allows hubot to respond with attendance information
+//
+// Commands:
+//  hubot who has the most hours: Gives the top 3 hour earners
+//  hubot when were hours last updated: Gives how long ago attendance was updated
+//
 module.exports = function(robot) {
 
   robot.respond( /who has the most hours\s?/i, function ( message ){

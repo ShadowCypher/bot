@@ -1,3 +1,12 @@
+// Description:
+//  Allow hubot to interact with The Blue Alliance
+//
+// Commands:
+//  hubot who is team <team number>: Display team information
+//  hubot when|where is <event>: Display event information
+//  hubot is <team> at <event>: Responds if a team is at an event
+//  hubot was <team> at <event> playoffs: Reponds if a team was in the playoffs
+//
 module.exports = function(robot) {
   var TBA = require( './tba-api.js');
   robot.hear( /what is the blue alliance\s?/, function ( message ){

@@ -1,12 +1,11 @@
-/*
-# Description:
-#   General fun and random utilities for hubots
-#
-# Commands:
-#   hubot is it tuesday? - Confirms if it is tuesday according to server time.
-#   hubot is it the weekend? - Confirms if it is the weekend according to server time.
-*/
-
+// Description:
+//  General fun and random utilities for hubots
+//
+// Commands:
+//  is it tuesday? - Confirms if it is tuesday according to server time.
+//  is it the weekend? - Confirms if it is the weekend according to server time.
+//  hubot give me a carrot fact - Responds with a random carrot fact
+//  hubot give me a quote - Responds with a random quote
 module.exports = function(robot) {
   robot.hear( /is it tuesday\s?\s?/i, function ( response ){
     var today = new Date();
