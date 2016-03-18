@@ -17,7 +17,7 @@ module.exports = function(robot) {
     response.reply( today.getDay() === 0 || today.getDay() === 6 ? "It is the freaken weekend." : "Nope. Get back to work." );
   } );
   robot.hear( /how (much|many)\s?\s?/i, function( response ) {
-    response.reply( Math.floor(Math.random() * (20)) + 1;)
+    response.reply( Math.floor(Math.random() * (20)) + 1);
   } );
   robot.respond( /give me a carrot fact/, function( response ) {
      var fs = require("fs");
