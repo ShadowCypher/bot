@@ -5,5 +5,9 @@ set -e
 npm install
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
+export HUBOT_HEROKU_KEEPALIVE_URL="https://team3128-hubot.herokuapp.com"
+export HUBOT_HEROKU_WAKEUP_TIME="6:00"
+export HUBOT_HEROKU_SLEEP_TIME="00:00"
+export HUBOT_HEROKU_KEEPALIVE_INTERVAL="5"
 export HUBOT_SLACK_TOKEN="xoxb-27299626354-1yzMaj5uZkKl7QcCnuEMTFfn"
 exec node_modules/.bin/hubot --name "narwhal" "$@"
