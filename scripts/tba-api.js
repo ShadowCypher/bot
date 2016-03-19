@@ -53,7 +53,7 @@ module.exports = (function(){
 
     page_num = parseInt( page_num );
     path = "teams/" + page_num;
-    obj.get( path, callback );``
+    obj.get( path, callback );
 
   }
 
