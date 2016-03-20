@@ -19,13 +19,13 @@ module.exports = function(robot) {
   robot.hear( /how (much|many)\s?\s?/i, function( response ) {
     response.reply( Math.floor(Math.random() * (20)) + 1);
   } );
-  robot.respond( /give me a carrot fact/, function( response ) {
+  robot.respond( /give me (a|another|the next|a better)? carrot fact/, function( response ) {
      var fs = require("fs");
      var contents = fs.readFileSync("carrot-facts.csv") + " ";
      content = contents.split("\n");
      response.send( response.random( content ) );
   } );
-  robot.respond( /give me a quote/, function( message ){
+  robot.respond( /give me (a|another|the next|a better)? quote/, function( message ){
     var fs = require("fs");
     var contents = fs.readFileSync("random-quotes.csv") + " ";
     content = contents.split("\n");
