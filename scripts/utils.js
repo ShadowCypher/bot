@@ -7,6 +7,7 @@
 //  hubot give me a carrot fact - Responds with a random carrot fact
 //  hubot give me a quote - Responds with a random quote
 //  ... how many/much ... - Outputs random integer(from 1-20) to answer a quantitative question.
+//  what is ...? - Responds with an 'answer' to a math question or a random response
 module.exports = function(robot) {
   robot.hear( /is it tuesday\s?\s?/i, function ( response ){
     var today = new Date();
@@ -31,5 +32,15 @@ module.exports = function(robot) {
     var contents = fs.readFileSync("random-quotes.csv") + " ";
     content = contents.split("\n");
     message.send( "> " + message.random( content ) );
+  } );
+  robot.respond( /what is (.*)/i, function( message ){
+    var input = message.match[1];
+    if (input.indexOf( "+" ) != -1 || input.indexOf( "-" ) != -1 || input.indexOf( "/" ) != -1 || input.indexOf( "*" ) != -1) {
+      var randnum = Math.floor(Math.random() * (50)) + 1;
+      message.reply( randnum );
+    }
+    else {
+      message.reply( message.random(["IDK bro", "Cheese", "Pokémon", "OVER 9000", "42"]));
+    }
   } );
 }
