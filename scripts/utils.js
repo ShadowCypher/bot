@@ -23,12 +23,12 @@ module.exports = function(robot) {
      var fs = require("fs");
      var contents = fs.readFileSync("carrot-facts.csv") + " ";
      content = contents.split("\n");
-     response.send( response.random( content ) );
+     response.send( "> " + response.random( content ) );
   } );
   robot.respond( /give me (a|another|the next|a better)? quote/, function( message ){
     var fs = require("fs");
     var contents = fs.readFileSync("random-quotes.csv") + " ";
     content = contents.split("\n");
-    message.send( message.random( content ) );
+    message.send( "> " + message.random( content ) );
   } );
 }
