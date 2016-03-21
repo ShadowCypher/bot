@@ -17,7 +17,8 @@ module.exports = function(robot) {
     response.reply( today.getDay() === 0 || today.getDay() === 6 ? "It is the freaken weekend." : "Nope. Get back to work." );
   } );
   robot.hear( /how (much|many)\s?\s?/i, function( response ) {
-    response.reply( Math.floor(Math.random() * (20)) + 1);
+    var randnum = Math.floor(Math.random() * (20)) + 1;
+    response.reply( response.random( [randnum, randnum, randnum, randnum, "A quantity that is greater than the integer formed by multiplying the whole number 9 by 10 to the third power" ] ) );
   } );
   robot.respond( /give me (.*)carrot fact(s)?/i, function( response ) {
      var fs = require("fs");
