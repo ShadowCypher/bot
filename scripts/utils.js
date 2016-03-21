@@ -35,12 +35,34 @@ module.exports = function(robot) {
   } );
   robot.respond( /what is (.*)/i, function( message ){
     var input = message.match[1];
-    if (input.indexOf( "+" ) != -1 || input.indexOf( "-" ) != -1 || input.indexOf( "/" ) != -1 || input.indexOf( "*" ) != -1) {
-      var randnum = Math.floor(Math.random() * (50)) + 1;
-      message.reply( randnum );
+    if (input.indexOf( "+" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "+" )));
+      var numTwo = Number(input.substring(input.indexOf( "+" )+1, input.length));
+      var answer = numOne + numTwo;
+    }
+    else if (input.indexOf( "-" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "-" )));
+      var numTwo = Number(input.substring(input.indexOf( "-" )+1, input.length));
+      var answer = numOne - numTwo;
+    }
+    else if (input.indexOf( "*" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "*" )));
+      var numTwo = Number(input.substring(input.indexOf( "*" )+1, input.length));
+      var answer = numOne * numTwo;
+    }
+    else if (input.indexOf( "/" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "/" )));
+      var numTwo = Number(input.substring(input.indexOf( "/" )+1, input.length));
+      var answer = numOne / numTwo;
     }
     else {
-      message.reply( message.random(["IDK bro", "Cheese", "Pokémon", "OVER 9000", "42"]));
+      answer = message.random(["idk bro", "Cheese", "Pokémon", "OVER 9000", "42"]);
+    }
+    if (isNaN(answer)) {
+      message.reply("I'm still in int math A. idk");
+    }
+    else {
+      message.reply(answer);
     }
   } );
 }
