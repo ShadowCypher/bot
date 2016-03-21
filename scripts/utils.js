@@ -7,6 +7,7 @@
 //  hubot give me a carrot fact - Responds with a random carrot fact
 //  hubot give me a quote - Responds with a random quote
 //  ... how many/much ... - Outputs random integer(from 1-20) to answer a quantitative question.
+//  what is ...? - Responds with an 'answer' to a math question or a random response
 module.exports = function(robot) {
 
   /**
@@ -55,5 +56,37 @@ module.exports = function(robot) {
     var contents = fs.readFileSync("random-quotes.csv") + " ";
     content = contents.split("\n");
     message.send( "> " + message.random( content ) );
+  } );
+  robot.respond( /what is (.*)/i, function( message ){
+    var input = message.match[1];
+    if (input.indexOf( "+" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "+" )));
+      var numTwo = Number(input.substring(input.indexOf( "+" )+1, input.length));
+      var answer = numOne + numTwo;
+    }
+    else if (input.indexOf( "-" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "-" )));
+      var numTwo = Number(input.substring(input.indexOf( "-" )+1, input.length));
+      var answer = numOne - numTwo;
+    }
+    else if (input.indexOf( "*" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "*" )));
+      var numTwo = Number(input.substring(input.indexOf( "*" )+1, input.length));
+      var answer = numOne * numTwo;
+    }
+    else if (input.indexOf( "/" ) != -1) {
+      var numOne = Number(input.substring(0, input.indexOf( "/" )));
+      var numTwo = Number(input.substring(input.indexOf( "/" )+1, input.length));
+      var answer = numOne / numTwo;
+    }
+    else {
+      answer = message.random(["idk bro", "Cheese", "Pokémon", "OVER 9000", "42"]);
+    }
+    if (isNaN(answer)) {
+      message.reply("I'm still in int math A. idk");
+    }
+    else {
+      message.reply(answer);
+    }
   } );
 }
