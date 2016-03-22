@@ -8,6 +8,11 @@
 //  hubot give me a quote - Responds with a random quote
 //  ... how many/much ... - Outputs random integer(from 1-20) to answer a quantitative question.
 //  what is ...? - Responds with an 'answer' to a math question or a random response
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 module.exports = function(robot) {
 
   /**
@@ -82,8 +87,8 @@ module.exports = function(robot) {
     else {
       answer = message.random(["idk bro", "Cheese", "Pokémon", "OVER 9000", "42"]);
     }
-    if (isNaN(answer)) {
-      message.reply("I'm still in int math A. idk");
+    if (isNumber(answer)) {
+      message.reply("idk im still in int math A. (If you want to do teh mathstuffs, use 'narwhal calculate')");
     }
     else {
       message.reply(answer);
