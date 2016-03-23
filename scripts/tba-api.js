@@ -2,7 +2,7 @@ module.exports = (function(){
   var obj = {
     'current_version' : '0.2',
     'team_number'     : 'frc3128',
-    'app_identifier'  : 'team-analysis',
+    'app_identifier'  : 'narwhal-hubot',
     'api_base_host'   : 'www.thebluealliance.com',
     'api_base_path'   : '/api/v2/',
     'provide_default_callback' : true,
