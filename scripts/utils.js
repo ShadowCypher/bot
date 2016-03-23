@@ -62,11 +62,6 @@ module.exports = function(robot) {
     content = contents.split("\n");
     message.send( "> " + message.random( content ) );
   } );
-
-  /**
-   * Responds to 'what is'
-   * @author bobron
-   */
   robot.respond( /what is (.*)/i, function( message ){
     var input = message.match[1];
     if (input.indexOf( "+" ) != -1) {
