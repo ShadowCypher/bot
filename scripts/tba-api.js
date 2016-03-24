@@ -1,4 +1,5 @@
-module.exports = (function(){
+(function(){
+
   var obj = {
     'current_version' : '0.2',
     'team_number'     : 'frc3128',
@@ -7,6 +8,15 @@ module.exports = (function(){
     'api_base_path'   : '/api/v2/',
     'provide_default_callback' : true,
   };
+
+  // Export to node if running in node. Otherwise, export to window
+  var isNode = false;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = obj;
+    isNode = true;
+  } else {
+    window.TBA = obj;
+  }
 
   /**
    * Returns string on version information
@@ -53,7 +63,7 @@ module.exports = (function(){
 
     page_num = parseInt( page_num );
     path = "teams/" + page_num;
-    obj.get( path, callback );
+    obj.get( path, callback );``
 
   }
 
@@ -544,35 +554,65 @@ module.exports = (function(){
       return true;
     }
 
-    var https = require('https');
-    c = function( response ) {
-      var data = "";
-      response.on( 'data', function (chunk) {
-        data += chunk;
-      });
-      response.on( 'end', function () {
-        data = data.replace(new RegExp("'", 'g'), '"');
-        var json = JSON.parse( data );
-        obj.cache.put( path, json );
+    var receiver = function( responseText ) {
+      var data = JSON.parse( responseText );
+      obj.cache.put( path, data );
 
-        if ( typeof callback === "function" ) {
-          callback( json );
-        }
-      });
+      if ( typeof callback === "function" ) {
+        callback( data );
+      } else if ( obj.provide_default_callback === true ) {
+        obj.defaultCallback( data );
+      }
     }
 
-    var indentifier = obj.team_number + ':' + obj.app_identifier + ':' + obj.current_version;
-    var options = {
-      hostname: obj.api_base_host,
-      path: obj.api_base_path + path,
-      headers: { 'X-TBA-App-Id' : indentifier },
+    obj.request_handler( obj.api_base_host, obj.api_base_path + path, receiver );
+  }
+
+  /**
+   * Create request handler based on
+   * server environment.
+   */
+  if ( isNode ) {
+    obj.request_handler = function( host, path, callback ) {
+      var receiver = function( response ) {
+        var responseText = "";
+        response.on( 'data', function ( chunk ) {
+          responseText += chunk;
+        });
+        response.on( 'end', function () {
+          callback( responseText );
+        });
+      };
+      try {
+        var resource = require('https');
+        resource.request( {
+          hostname: host,
+          path: path,
+          headers: { 'X-TBA-App-Id' : obj.get_api_identifier() },
+        }, receiver ).end();
+        return true;
+      } catch ( err ) {
+        console.log( err );
+        return false;
+      }
     };
-    try {
-        https.request(options, c).end();
-    } catch ( err ) {
-      console.log( err );
-    }
+  } else {
+    obj.request_handler = function( host, path, callback ) {
+      var resource = new XMLHttpRequest();
+      resource.onreadystatechange = function() {
+          if (resource.readyState == 4 && resource.status == 200) {
+            callback( resource.responseText );
+          }
+      }
+      resource.open( "GET", "https://" + host + path, true );
+      resource.setRequestHeader( 'X-TBA-App-Id', obj.get_api_identifier() );
+      resource.send();
+      return true;
+    };
+  }
 
+  obj.get_api_identifier = function() {
+    return obj.team_number + ':' + obj.app_identifier + ':' + obj.current_version;
   }
 
   /**
@@ -657,13 +697,6 @@ module.exports = (function(){
      */
     obj.dump = function() {
       return data;
-    }
-
-    obj.clear = function() {
-      data = {};
-      obj.stats.writes = 0;
-      obj.stats.hits = 0;
-      obj.stats.misses = 0;
     }
 
     return obj;
