@@ -1,7 +1,7 @@
 (function(){
 
   var obj = {
-    'current_version' : '0.2',
+    'current_version' : '0.3',
     'team_number'     : 'frc3128',
     'app_identifier'  : 'narwhal-hubot',
     'api_base_host'   : 'www.thebluealliance.com',
