@@ -9,6 +9,8 @@
 //
 module.exports = function(robot) {
   var TBA = require( './tba-api.js');
+  TBA.app_identifier = 'hubot';
+  
   robot.hear( /what is the blue alliance\s?/, function ( message ){
     message.send( "The Blue Alliance is a site where anyone can view basic information and statistics on FIRST FRC Teams. http://thebluealliance.com." );
     message.send( TBA.version() );
