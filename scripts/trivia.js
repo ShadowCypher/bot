@@ -13,7 +13,7 @@ module.exports = function(robot) {
       'questions'       : [],
       'current_answers' : [],
     };
-    
+
     obj.next_question = function( response ) {
       var id = Math.floor( Math.random() * obj.questions.length );
       var data = obj.questions.splice( id, 1 )[0].toLowerCase().split(",");
@@ -149,6 +149,19 @@ module.exports = function(robot) {
       } else {
         response.reply( "I am sorry. Something has gone wrong." );
       }
+  } );
+
+  robot.respond( /what is our score?/i, function( response ) {
+
+      if ( ! current ) {
+        response.reply( "There is no game going on." );
+        return;
+      } else if ( response.message.user.room != current.room ) {
+        response.reply( "You are not in the correct room. Join #" + current.room + "." );
+        return;
+      }
+
+      response.reply( "Your team now has a score of " + current.get_user_team_score( response.message.user ) );
   } );
 
   robot.respond( /(leave game|leave team|quit team|quit game)/i, function( response ) {

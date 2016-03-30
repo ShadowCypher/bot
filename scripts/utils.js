@@ -88,7 +88,7 @@ module.exports = function(robot) {
       answer = message.random(["idk bro", "Cheese", "Pokémon", "OVER 9000", "42"]);
     }
     if (isNumber(answer)) {
-      message.reply("idk im still in int math A. (If you want to do teh mathstuffs, use 'narwhal calculate')");
+      //message.reply("idk im still in int math A. (If you want to do teh mathstuffs, use 'narwhal calculate')");
     }
     else {
       message.reply(answer);
