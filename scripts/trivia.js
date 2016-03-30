@@ -9,10 +9,11 @@ module.exports = function(robot) {
       'room'  : room,
       'users' : [],
       'teams' : [],
+      'scores': [],
       'questions'       : [],
       'current_answers' : [],
     };
-
+    
     obj.next_question = function( response ) {
       var id = Math.floor( Math.random() * obj.questions.length );
       var data = obj.questions.splice( id, 1 )[0].toLowerCase().split(",");
@@ -30,8 +31,28 @@ module.exports = function(robot) {
       }
     }
 
+    obj.submit_answer = function( message ) {
+      if ( ! obj.is_answer( message.text  ) ) {
+        return false;
+      }
+
+      var team = find_team( message.user.id );
+      if ( obj.scores[ team ] == undefined ) {
+        obj.scores[ team ] = 1;
+      } else {
+        obj.scores[ team ] += 1;
+      }
+
+      return true;
+    }
+
     obj.is_user_playing = function( user ) {
        return user.room === obj.room && find_team( user.id ) !== -1;
+    }
+
+    obj.get_user_team_score = function ( user ) {
+      var team = find_team( user.id );
+      return obj.scores[ team ];
     }
 
     obj.add_user = function( user, team ) {
@@ -97,11 +118,17 @@ module.exports = function(robot) {
   robot.listen( function( message ){
       return current !== false && current.is_user_playing( message.user );
     }, function( response ){
-    if ( current.is_answer( response.message.text ) ) {
-      response.reply( "CORRECT!" );
+    if ( current.submit_answer( response.message ) ) {
+      response.reply( "CORRECT! Your team now has a score of " + current.get_user_team_score( response.message.user ) );
       current.next_question( response );
     }
   });
+
+  robot.respond ( /we give up/, function( response ) {
+    if ( current === false ) { return false; }
+    response.reply( "The correct answers were '" + current.current_answers.join( "','" ) + "'" );
+    current.next_question( response );
+  } );
 
   robot.respond( /join team (\d*)/i, function( response ) {
 
