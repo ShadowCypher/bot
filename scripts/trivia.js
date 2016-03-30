@@ -12,6 +12,7 @@ module.exports = function(robot) {
       'scores': [],
       'questions'       : [],
       'current_answers' : [],
+      'blocks' : [],
     };
 
     obj.next_question = function( response ) {
@@ -19,6 +20,7 @@ module.exports = function(robot) {
       var data = obj.questions.splice( id, 1 )[0].toLowerCase().split(",");
       var question = data.splice(0,1);
       obj.current_answers = data;
+      obj.blocks = [];
       response.reply( question );
     }
 
@@ -31,12 +33,26 @@ module.exports = function(robot) {
       }
     }
 
+    obj.is_team_blocked = function( team ) {
+      if ( obj.blocks.indexOf( team ) !== -1 ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     obj.submit_answer = function( message ) {
+      var team = find_team( message.user.id );
+      if ( obj.is_team_blocked( team ) ) {
+        return false;
+      } else {
+        obj.blocks.push( team );
+      }
+
       if ( ! obj.is_answer( message.text  ) ) {
         return false;
       }
 
-      var team = find_team( message.user.id );
       if ( obj.scores[ team ] == undefined ) {
         obj.scores[ team ] = 1;
       } else {
@@ -53,6 +69,11 @@ module.exports = function(robot) {
     obj.get_user_team_score = function ( user ) {
       var team = find_team( user.id );
       return obj.scores[ team ];
+    }
+
+    obj.is_user_team_blocked = function ( user ) {
+      var team = find_team( user.id );
+      return obj.is_team_blocked( team );
     }
 
     obj.add_user = function( user, team ) {
@@ -116,11 +137,18 @@ module.exports = function(robot) {
   } );
 
   robot.listen( function( message ){
-      return current !== false && current.is_user_playing( message.user );
+      return current !== false && current.is_user_playing( message.user ) && ! message.text.match(/(start questions|first question|give me a question|skip|skip question|next|next question)/);
     }, function( response ){
+    if ( current.is_user_team_blocked( response.message.user ) ) {
+      response.reply( "Your team has already answered." );
+      return false;
+    }
+
     if ( current.submit_answer( response.message ) ) {
       response.reply( "CORRECT! Your team now has a score of " + current.get_user_team_score( response.message.user ) );
       current.next_question( response );
+    } else {
+      response.reply( "Your answer is incorrect." );
     }
   });
 
