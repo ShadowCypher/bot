@@ -15,25 +15,29 @@ module.exports = function(robot) {
 
   robot.hear( /what issues are open\s?/i, function (response) {
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
+      var list = "";
       for (i = 0; i < issues.length; i++) {
-        response.reply(">" + issues[i].title);
+        list += "> " + issues[i].title + "\n";
       }
+      response.reply(list);
     });
   });
 
   robot.hear( /show me issues with the (.*) label/i, function (message) {
     var input = message.match[1];
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
+      var list = "";
       for (i = 0; i < issues.length; i++) {
         var issue = issues[i];
         if (issue.labels != "") {
           for (j = 0; j < issue.labels.length; j++) {
             if (issue.labels[j].name.includes(input)) {
-              message.reply("> *" + issue.title + "*: " + issue.labels[0].name);
+              list += "> *" + issue.title + "*: " + issue.labels[0].name;
             }
           }
         }
       }
+      message.reply(list);
     });
   });
 
