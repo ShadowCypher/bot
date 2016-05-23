@@ -15,7 +15,7 @@ module.exports = function(robot) {
 
   robot.hear( /what issues are open\s?/i, function (response) {
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
-      var list = "";
+      var list = "\n";
       for (i = 0; i < issues.length; i++) {
         list += "> " + issues[i].title + "\n";
       }
@@ -26,13 +26,13 @@ module.exports = function(robot) {
   robot.hear( /show me issues with the (.*) label/i, function (message) {
     var input = message.match[1];
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
-      var list = "";
+      var list = "\n";
       for (i = 0; i < issues.length; i++) {
         var issue = issues[i];
         if (issue.labels != "") {
           for (j = 0; j < issue.labels.length; j++) {
             if (issue.labels[j].name.includes(input)) {
-              list += "> *" + issue.title + "*: " + issue.labels[0].name;
+              list += "> *" + issue.title + "*: " + issue.labels[0].name + "\n";
             }
           }
         }
@@ -41,15 +41,15 @@ module.exports = function(robot) {
     });
   });
 
-  robot.hear( /(describe the|show me the description of the|what is the description of the|what is the) (.*) issue\s?/i, function (message) {
+  robot.hear( /(describe|show me the description of) the (.*) issue\s?/i, function (message) {
     var input = message.match[2];
 
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
       for (i = 0; i < issues.length; i++) {
         var issue = issues[i];
-        if (issue.title.includes(input)) {
-            message.reply("> *" + issue.title + "*: " + issue.body );
-          }
+        if (issue.title.toUpperCase().includes(input.toUpperCase())) {
+            message.reply("\n > *" + issue.title + "*: \n > s" + issue.body );
+        }
       };
     });
   });
