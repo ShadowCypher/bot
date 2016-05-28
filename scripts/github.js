@@ -6,8 +6,6 @@
 // show me issues with the <name> label - Lists all open issues that have the <name> label
 // describe the <name> issue? - Returns the body of the issue with the title <name>
 // show me the description of the <name> issue? - Returns the body of the issue with the title <name>
-// what is the description of the <name> issue? - Returns the body of the issue with the title <name>
-// what is the <name> issue? - Returns the body of the issue with the title <name>
 //
 
 module.exports = function(robot) {
@@ -31,13 +29,13 @@ module.exports = function(robot) {
         var issue = issues[i];
         if (issue.labels != "") {
           for (j = 0; j < issue.labels.length; j++) {
-            if (issue.labels[j].name.includes(input)) {
+            if (issue.labels[j].name.toUpperCase().includes(input.toUpperCase())) {
               list += "> *" + issue.title + "*: " + issue.labels[0].name + "\n";
             }
           }
         }
       }
-      message.reply(list);
+      message.reply("I found these issues with the label '" + input + "':" + list);
     });
   });
 
@@ -45,12 +43,14 @@ module.exports = function(robot) {
     var input = message.match[2];
 
     github.get( "https://api.github.com/repos/Team3128/info/issues", function (issues) {
+      var endStr = "";
       for (i = 0; i < issues.length; i++) {
         var issue = issues[i];
         if (issue.title.toUpperCase().includes(input.toUpperCase())) {
-            message.reply("\n > *" + issue.title + "*: \n > s" + issue.body );
+            endStr += "\n > *" + issue.title + "*: \n > " + issue.body;
         }
       };
+      message.reply("I found this for the title '" + input + "' " + endStr);
     });
   });
 
