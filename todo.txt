@@ -1,3 +1,4 @@
 Make Hubot useful
 Do stuff
 Eat food
+And ask it 'how many' + (something)
