@@ -85,7 +85,7 @@ module.exports = function(robot) {
       var answer = numOne / numTwo;
     }
     else {
-      answer = message.random(["idk bro", "Cheese", "Pokémon", "OVER 9000", "42"]);
+      answer = message.random(["idk bro", "Cheese", "Pokémon", "much wow", "OVER 9000", "42"]);
     }
     if (isNumber(answer)) {
       //message.reply("idk im still in int math A. (If you want to do teh mathstuffs, use 'narwhal calculate')");
