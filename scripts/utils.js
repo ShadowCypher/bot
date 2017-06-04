@@ -30,9 +30,15 @@ module.exports = function(robot) {
    */
   robot.hear( /is it the weekend/i, function ( response ){
     var today = new Date();
-    response.reply( today.getDay() === 0 || today.getDay() === 6 ? "It is the freaken weekend." : "Nope. Get back to work." );
+    response.reply( today.getDay() === 0 || today.getDay() === 6 ? "It is the freakin weekend." : "Nope. Get back to work." );
   } );
-
+  /**
+   * Listen for people asking about FRC
+   * @author shadowcypher
+   */
+  robot.hear( /what is (FRC|FIRST Robotics Competition)/i, function ( response ) {
+      response.reply("FIRST Robotics Competition (FRC) is an international high school robotics competition. Each year, teams of high school students and mentors work during a six-week period to build game-playing robots that weigh up to 120 pounds (54 kg).");        
+  } );
   /**
    * Listen for people asking for a quantity and respond randomly
    * @author bobron
